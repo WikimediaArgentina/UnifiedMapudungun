@@ -1,3 +1,4 @@
 Once you have downloaded the code, place the 'UnifiedMapudungun' directory within your MediaWiki 'extensions' directory. Then add the following code to your LocalSettings.php file:
-# Awesomeness
+
+# UnifiedMapudungun 
 require_once( "$IP/extensions/UnifiedMapudungun/UnifiedMapudungun.php" );
