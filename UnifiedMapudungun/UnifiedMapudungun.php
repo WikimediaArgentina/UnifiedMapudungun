@@ -13,15 +13,15 @@ if ( !defined( 'MEDIAWIKI' ) ) die();
 define( 'UnifiedMapudungun_VERSION', '0.9' );
 
 $wgExtensionCredits['other'][] = array(
-	'path' => __FILE__,
-	'name' => 'UnifiedMapudungun',
-	'version' => UnifiedMapudungun_VERSION,
-	'author' => array(
+    'path' => __FILE__,
+    'name' => 'UnifiedMapudungun',
+    'version' => UnifiedMapudungun_VERSION,
+    'author' => array(
         '[http://meta.wikimedia.org/wiki/User:Mahadeva Mahadeva]',
         '[http://meta.wikimedia.org/wiki/User:B1mbo B1mbo]',
         '[http://meta.wikimedia.org/wiki/User:Superzerocool Superzerocool]'
     ),
-	'url' => 'https://github.com/pmolina/UnifiedMapudungun',
+    'url' => 'https://github.com/pmolina/UnifiedMapudungun',
     'description' => 'A simple MediaWiki extension used to unify different variations of mapudungun.',
 );
 
