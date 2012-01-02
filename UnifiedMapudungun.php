@@ -41,7 +41,7 @@ class UnifiedMapudungun {
      */
     private function transform( $text ) {
         /* Vowels */
-		$text = preg_replace( '/ə|ï|v/', 'ü', $text );
+        $text = preg_replace( '/ə|ï|v/', 'ü', $text );
         $text = preg_replace( '/Ï|V/', 'Ü', $text );
 
         /* Glides */
@@ -57,36 +57,36 @@ class UnifiedMapudungun {
         $text = preg_replace( '/j/', 'll', $text );
         $text = preg_replace( '/N(·|d|h)|H/', 'N\'', $text );
         $text = preg_replace( '/(n|T|t)(·|d|h)/', '$1\'', $text );
-		$text = preg_replace( '/([^(C|c|N|n)])h/', '$1n\'', $text );
-		$text = preg_replace( '/Ŋ|ŋ/', 'ng', $text );
-		$text = preg_replace( '/(\b)G/', '$1Ng', $text );
-		$text = preg_replace( '/(\b)g/', '$1ng', $text );
-		$text = preg_replace( '/(T|t)x/', '$1r', $text );
-		$text = preg_replace( '/X/', 'Tr', $text );
-		$text = preg_replace( '/x/', 'tr', $text );
-		$text = preg_replace( '/ʃ/', 'sh', $text );
+        $text = preg_replace( '/([^(C|c|N|n)])h/', '$1n\'', $text );
+        $text = preg_replace( '/Ŋ|ŋ/', 'ng', $text );
+        $text = preg_replace( '/(\b)G/', '$1Ng', $text );
+        $text = preg_replace( '/(\b)g/', '$1ng', $text );
+        $text = preg_replace( '/(T|t)x/', '$1r', $text );
+        $text = preg_replace( '/X/', 'Tr', $text );
+        $text = preg_replace( '/x/', 'tr', $text );
+        $text = preg_replace( '/ʃ/', 'sh', $text );
 
         /* Diphthongs */
-		$text = preg_replace( '/(A|a|E|e|O|o|U|u|Ü|ü)i/', '$1y', $text );
-		$text = preg_replace( '/(A|a|E|e)(o|u)/', '$1w', $text );
-		$text = preg_replace( '/I(a|e|o|u|w)/', 'Y$1', $text );
+        $text = preg_replace( '/(A|a|E|e|O|o|U|u|Ü|ü)i/', '$1y', $text );
+        $text = preg_replace( '/(A|a|E|e)(o|u)/', '$1w', $text );
+        $text = preg_replace( '/I(a|e|o|u|w)/', 'Y$1', $text );
         // The diphthong doesn't apply when it's followed by an "a" or an "e"
-		$text = preg_replace( '/i(a|e|o|u|w)([^a]|[^e])/', 'y$1$2', $text );
-		$text = preg_replace( '/(O|U|Wu)(a|e|o)/', 'W$2', $text );
-		$text = preg_replace( '/(o|u)(a|e|o)/', 'w$2', $text );
-		$text = preg_replace( '/(O|o)u/', '$1w', $text );
+        $text = preg_replace( '/i(a|e|o|u|w)([^a]|[^e])/', 'y$1$2', $text );
+        $text = preg_replace( '/(O|U|Wu)(a|e|o)/', 'W$2', $text );
+        $text = preg_replace( '/(o|u)(a|e|o)/', 'w$2', $text );
+        $text = preg_replace( '/(O|o)u/', '$1w', $text );
 
-        /* errors comming from spanish orthography */
-		$text = preg_replace( '/Á/', 'A', $text );
-		$text = preg_replace( '/á/', 'a', $text );
-		$text = preg_replace( '/É/', 'E', $text );
-		$text = preg_replace( '/é/', 'e', $text );
-		$text = preg_replace( '/Í/', 'I', $text );
-		$text = preg_replace( '/í/', 'i', $text );
-		$text = preg_replace( '/Ó/', 'O', $text );
-		$text = preg_replace( '/ó/', 'o', $text );
-		$text = preg_replace( '/Ú/', 'U', $text );
-		$text = preg_replace( '/ú/', 'u', $text );
+        /* Common errors from spanish orthography (no accents) */
+        $text = preg_replace( '/Á/', 'A', $text );
+        $text = preg_replace( '/á/', 'a', $text );
+        $text = preg_replace( '/É/', 'E', $text );
+        $text = preg_replace( '/é/', 'e', $text );
+        $text = preg_replace( '/Í/', 'I', $text );
+        $text = preg_replace( '/í/', 'i', $text );
+        $text = preg_replace( '/Ó/', 'O', $text );
+        $text = preg_replace( '/ó/', 'o', $text );
+        $text = preg_replace( '/Ú/', 'U', $text );
+        $text = preg_replace( '/ú/', 'u', $text );
 
         return $text;
     }
