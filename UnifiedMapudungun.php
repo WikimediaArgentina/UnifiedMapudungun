@@ -107,6 +107,9 @@ class UnifiedMapudungun {
      */
     public function onArticleSave( &$article, &$user, &$text, &$summary, $minor,
                                    $watchthis, $sectionanchor, &$flags, &$status ) {
+        // Extension should be active only if the entire wiki is set to be used in mapudungun
+        global $wgLanguageCode;
+        if ( $wgLanguageCode != 'arn' ) return true;
         try {
             $text = $this->transform( $text );
             return true;
