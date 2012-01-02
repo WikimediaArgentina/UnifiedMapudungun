@@ -6,7 +6,7 @@ if ( !defined( 'MEDIAWIKI' ) ) die();
  * @file
  * @ingroup Extensions
  * @author Patricio Molina (Mahadeva), Osmar Valdebenito (B1mbo) and Dennis Tobar Calderón (Superzerocool)
- * @copyright Copyright © 2012, Patricio Molina, Dennis Tobar Calderón, Osmar Valdebenito
+ * @copyright Copyright © 2012, Patricio Molina, Osmar Valdebenito, Dennis Tobar Calderón
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License 2.0 or later
  */
 
@@ -30,20 +30,27 @@ $wgHooks['ArticleSave'][] = $UnifiedMapudungun;
 
 class UnifiedMapudungun {
 
-    /*
-    Regular unification: transforming interdentals consonants
-    */
+    /**
+     * Regular unification: transforming interdentals consonants
+     * 
+     * @param $text string: original text
+     * @return string: transformed text
+     */
     private function toRegular( $text ) {
         $origin = array( "l'", "n'", "t'", "L'", "N'", "T'" );
         $result = array( "ḻ", "ṉ", "ṯ", "Ḻ", "Ṉ", "Ṯ" );
-        $new_text = str_replace($origin, $result, $text);
+        $new_text = str_replace( $origin, $result, $text );
         return $new_text;
     }
 
-    /*
-    Raguileo unification. 'g' is being converted to 'q', then 'nq' to 'ng'
-    TODO: needs improvement
-    */
+
+    /**
+     * Raguileo unification. 'g' is being converted to 'q', then 'nq' to 'ng'
+     * TODO: needs improvement
+     * 
+     * @param $text string: original text
+     * @return string: transformed text
+     */
     private function toRaguileo( $text ) {
         $origin = array(
             "ü", "ch", "tr", "d", "ll", "g", "nq", "ḻ", "ṉ", "Ü",
@@ -57,16 +64,19 @@ class UnifiedMapudungun {
             "t", "T", "C", "ll", "LL", "h", "b", "t", "B", "H",
             "T"
         );
-        $new_text = str_replace($origin, $result, $text);
+        $new_text = str_replace( $origin, $result, $text );
         return $new_text;
     }
 
-    /*
-    Repeating unification for azümchefe, so we can avoid issues
-    with letters like "ng" to "q". Capital syllabic groups for Ḻ, Ṉ and Ṯ
-    Repairing q to q and interdental t to th
-    TODO: needs improvement
-    */
+    /**
+     * Repeating unification for azümchefe, so we can avoid issues
+     * with letters like "ng" to "q". Capital syllabic groups for Ḻ, Ṉ and Ṯ
+     * Repairing q to q and interdental t to th
+     * TODO: needs improvement
+     * 
+     * @param $text string: original text
+     * @return string: transformed text
+     */
     private function toAzumchefe( $text ) {
         $origin = array(
             "ü", "ch", "tr", "d", "ll", "g", "nq", "ḻ", "ṉ", "Ü",
@@ -86,13 +96,24 @@ class UnifiedMapudungun {
             "NHO", "NHU", "NHÜ","ANH", "ENH", "INH", "ONH", "UNH", "ÜNH", "lh",
             "nh", "th", "LH", "NH", "TH"
         );
-        $new_text = str_replace($origin, $result, $text);
+        $new_text = str_replace( $origin, $result, $text );
         return $new_text;
     }
 
-    /*
-    Unifying variants of mapudungun
-    */
+    /**
+     * Unifying variants of mapudungun. Used by ArticleSave hook
+     *
+     * @param $article object: the article (Article object) being saved
+     * @param $user object: the user (User object) saving the article
+     * @param $text string: the new article text
+     * @param $summary string: the edit summary
+     * @param $minor string: minor edit flag
+     * @param $watchthis mixed: watch the page if true, unwatch the page if false, do nothing if null (since 1.17.0)
+     * @param $sectionanchor: not used
+     * @param $flags: bitfield, see documentation for details
+     * @param $status object: the Status object that will be returned by Article::doEdit()
+     * @return bool
+     */
     public function onArticleSave( &$article, &$user, &$text, &$summary, $minor,
                                    $watchthis, $sectionanchor, &$flags, &$status ) {
         try {
@@ -102,7 +123,7 @@ class UnifiedMapudungun {
             return true;
         }
         catch ( Exception $e ) {
-            return sprintf('Error: %s', $e->getMessage());
+            return sprintf( 'Error: %s', $e->getMessage() );
         }
     }
 }
