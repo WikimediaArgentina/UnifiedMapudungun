@@ -5,9 +5,9 @@ if ( !defined( 'MEDIAWIKI' ) ) die();
  *
  * @file
  * @ingroup Extensions
- * @author Patricio Molina (Mahadeva), Osmar Valdebenito (B1mbo) and Dennis Tobar Calderón (Superzerocool)
- * @copyright Copyright © 2012, Patricio Molina, Osmar Valdebenito, Dennis Tobar Calderón
- * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License 2.0 or later
+ * @author Patricio Molina (Mahadeva) and Osmar Valdebenito (B1mbo)
+ * @copyright Copyright © 2012, Patricio Molina and Osmar Valdebenito
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License 3.0 or later
  */
 
 define( 'UnifiedMapudungun_VERSION', '0.9' );
@@ -19,7 +19,6 @@ $wgExtensionCredits['other'][] = array(
     'author' => array(
         '[http://meta.wikimedia.org/wiki/User:Mahadeva Mahadeva]',
         '[http://meta.wikimedia.org/wiki/User:B1mbo B1mbo]',
-        '[http://meta.wikimedia.org/wiki/User:Superzerocool Superzerocool]'
     ),
     'url' => 'https://github.com/pmolina/UnifiedMapudungun',
     'description' => 'A simple MediaWiki extension used to unify different variations of mapudungun.',
@@ -42,7 +41,6 @@ class UnifiedMapudungun {
         $new_text = str_replace( $origin, $result, $text );
         return $new_text;
     }
-
 
     /**
      * Raguileo unification. 'g' is being converted to 'q', then 'nq' to 'ng'
