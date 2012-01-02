@@ -3,22 +3,25 @@ if ( !defined( 'MEDIAWIKI' ) ) die();
 /**
  * A simple MediaWiki extension used to unify different variations of mapudungun.
  *
+ * Special thanks to:
+ * - Osmar Valdebenito (Wikimedia Chile)
+ * - Andrés Chandía (chandia.net)
+ *
  * @file
  * @ingroup Extensions
- * @author Patricio Molina (Mahadeva) and Osmar Valdebenito (B1mbo)
- * @copyright Copyright © 2012, Patricio Molina and Osmar Valdebenito
+ * @author Patricio Molina (Mahadeva)
+ * @copyright Copyright © 2012, Patricio Molina
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License 3.0 or later
  */
 
-define( 'UnifiedMapudungun_VERSION', '0.9' );
+define( 'UnifiedMapudungun_VERSION', '0.9.1' );
 
 $wgExtensionCredits['other'][] = array(
     'path' => __FILE__,
     'name' => 'UnifiedMapudungun',
     'version' => UnifiedMapudungun_VERSION,
     'author' => array(
-        '[http://meta.wikimedia.org/wiki/User:Mahadeva Mahadeva]',
-        '[http://meta.wikimedia.org/wiki/User:B1mbo B1mbo]',
+        '[http://meta.wikimedia.org/wiki/User:Mahadeva Mahadeva]'
     ),
     'url' => 'https://github.com/pmolina/UnifiedMapudungun',
     'description' => 'A simple MediaWiki extension used to unify different variations of mapudungun.',
@@ -30,72 +33,62 @@ $wgHooks['ArticleSave'][] = $UnifiedMapudungun;
 class UnifiedMapudungun {
 
     /**
-     * Regular unification: transforming interdentals consonants
+     * Unification, using rules defined in "norwirin mapudungun trapümfe"
+     * http://www.chandia.net/k%C3%BCdawkawe
      * 
      * @param $text string: original text
      * @return string: transformed text
      */
-    private function toRegular( $text ) {
-        $origin = array( "l'", "n'", "t'", "L'", "N'", "T'" );
-        $result = array( "ḻ", "ṉ", "ṯ", "Ḻ", "Ṉ", "Ṯ" );
-        $new_text = str_replace( $origin, $result, $text );
-        return $new_text;
-    }
+    private function transform( $text ) {
+        /* Vowels */
+		$text = preg_replace( '/ə|ï|v/', 'ü', $text );
+        $text = preg_replace( '/Ï|V/', 'Ü', $text );
 
-    /**
-     * Raguileo unification. 'g' is being converted to 'q', then 'nq' to 'ng'
-     * TODO: needs improvement
-     * 
-     * @param $text string: original text
-     * @return string: transformed text
-     */
-    private function toRaguileo( $text ) {
-        $origin = array(
-            "ü", "ch", "tr", "d", "ll", "g", "nq", "ḻ", "ṉ", "Ü",
-            "Ṉ", "Ch", "Tr", "D", "Ll", "G", "NQ", "Ḻ", "TR", "LL",
-            "ṯ", "Ṯ", "CH", "l-l", "L-L", "l'", "n'", "t'", "L'","N'",
-            "T'"
-        );
-        $result = array(
-            "v", "c", "x", "z", "j", "q", "g", "b", "h", "V",
-            "H", "C", "X", "Z", "J", "Q", "G", "B", "X", "J",
-            "t", "T", "C", "ll", "LL", "h", "b", "t", "B", "H",
-            "T"
-        );
-        $new_text = str_replace( $origin, $result, $text );
-        return $new_text;
-    }
+        /* Glides */
+        $text = preg_replace( '/(.)q/', '$1g', $text );
 
-    /**
-     * Repeating unification for azümchefe, so we can avoid issues
-     * with letters like "ng" to "q". Capital syllabic groups for Ḻ, Ṉ and Ṯ
-     * Repairing q to q and interdental t to th
-     * TODO: needs improvement
-     * 
-     * @param $text string: original text
-     * @return string: transformed text
-     */
-    private function toAzumchefe( $text ) {
-        $origin = array(
-            "ü", "ch", "tr", "d", "ll", "g", "nq", "ḻ", "ṉ", "Ü",
-            "Ṉ", "Ch", "Tr", "D", "G", "NQ", "ḺA", "ḺE", "ḺI", "ḺO",
-            "ḺU", "ḺÜ", "AḺ", "EḺ", "IḺ", "OḺ", "UḺ", "ÜḺ", "NG", "Ḻ",
-            "TR", "l-l", "L-L", "ṯ", "Ṯ", "ṮA", "ṮE", "ṮI", "ṮO", "ṮU",
-            "ṮÜ", "AṮ", "EṮ", "IṮ", "OṮ", "UṮ", "ÜṮ", "ṈA", "ṈE", "ṈI",
-            "ṈO", "ṈU", "ṈÜ", "AṈ", "EṈ", "IṈ", "OṈ", "UṈ", "ÜṈ", "l'",
-            "n'", "t'", "L'", "N'", "T'"
-        );
-        $result = array(
-            "ü", "ch", "tx", "z", "ll", "q", "g", "lh", "nh", "Ü",
-            "Nh", "Ch", "Tx", "Z", "Q", "G", "LHA", "LHE", "LHI", "LHO",
-            "LHU", "LHÜ", "ALH", "ELH", "ILH", "OLH", "ULH", "ÜLH", "G", "Lh",
-            "TX", "ll", "LL", "th", "TH", "THA", "THE", "THI", "THO", "THU",
-            "THÜ", "ATH", "ETH", "ITH", "OTH", "UTH", "ÜTH", "NHA", "NHE", "NHI",
-            "NHO", "NHU", "NHÜ","ANH", "ENH", "INH", "ONH", "UNH", "ÜNH", "lh",
-            "nh", "th", "LH", "NH", "TH"
-        );
-        $new_text = str_replace( $origin, $result, $text );
-        return $new_text;
+        /* Consonants */
+        $text = preg_replace( '/(C|c)([^h])/', '$1h$2', $text );
+        $text = preg_replace( '/Sd|Z/', 'D', $text );
+        $text = preg_replace( '/sd|z/', 'd', $text );
+        $text = preg_replace( '/L(·|d|h)|B/', 'L\'', $text );
+        $text = preg_replace( '/l(·|d|h)|b/', 'l\'', $text );
+        $text = preg_replace( '/J/', 'Ll', $text );
+        $text = preg_replace( '/j/', 'll', $text );
+        $text = preg_replace( '/N(·|d|h)|H/', 'N\'', $text );
+        $text = preg_replace( '/(n|T|t)(·|d|h)/', '$1\'', $text );
+		$text = preg_replace( '/([^(C|c|N|n)])h/', '$1n\'', $text );
+		$text = preg_replace( '/Ŋ|ŋ/', 'ng', $text );
+		$text = preg_replace( '/(\b)G/', '$1Ng', $text );
+		$text = preg_replace( '/(\b)g/', '$1ng', $text );
+		$text = preg_replace( '/(T|t)x/', '$1r', $text );
+		$text = preg_replace( '/X/', 'Tr', $text );
+		$text = preg_replace( '/x/', 'tr', $text );
+		$text = preg_replace( '/ʃ/', 'sh', $text );
+
+        /* Diphthongs */
+		$text = preg_replace( '/(A|a|E|e|O|o|U|u|Ü|ü)i/', '$1y', $text );
+		$text = preg_replace( '/(A|a|E|e)(o|u)/', '$1w', $text );
+		$text = preg_replace( '/I(a|e|o|u|w)/', 'Y$1', $text );
+        // The diphthong doesn't apply when it's followed by an "a" or an "e"
+		$text = preg_replace( '/i(a|e|o|u|w)([^a]|[^e])/', 'y$1$2', $text );
+		$text = preg_replace( '/(O|U|Wu)(a|e|o)/', 'W$2', $text );
+		$text = preg_replace( '/(o|u)(a|e|o)/', 'w$2', $text );
+		$text = preg_replace( '/(O|o)u/', '$1w', $text );
+
+        /* errors comming from spanish orthography */
+		$text = preg_replace( '/Á/', 'A', $text );
+		$text = preg_replace( '/á/', 'a', $text );
+		$text = preg_replace( '/É/', 'E', $text );
+		$text = preg_replace( '/é/', 'e', $text );
+		$text = preg_replace( '/Í/', 'I', $text );
+		$text = preg_replace( '/í/', 'i', $text );
+		$text = preg_replace( '/Ó/', 'O', $text );
+		$text = preg_replace( '/ó/', 'o', $text );
+		$text = preg_replace( '/Ú/', 'U', $text );
+		$text = preg_replace( '/ú/', 'u', $text );
+
+        return $text;
     }
 
     /**
@@ -115,9 +108,7 @@ class UnifiedMapudungun {
     public function onArticleSave( &$article, &$user, &$text, &$summary, $minor,
                                    $watchthis, $sectionanchor, &$flags, &$status ) {
         try {
-            $text = $this->toRegular( $text );
-            $text = $this->toRaguileo( $text );
-            $text = $this->toAzumchefe( $text );
+            $text = $this->transform( $text );
             return true;
         }
         catch ( Exception $e ) {
